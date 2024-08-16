@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "open-ai"
+version = "0.1.0"
+description = ""
+authors = ["Alisson <alissonpintor@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+openai = "^1.40.8"
+ipykernel = "^6.29.5"
+python-dotenv = "^1.0.1"
+yfinance = "^0.2.41"
+pandas = "^2.2.2"
+matplotlib = "^3.9.2"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.11.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
