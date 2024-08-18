@@ -13,6 +13,7 @@ python-dotenv = "^1.0.1"
 yfinance = "^0.2.41"
 pandas = "^2.2.2"
 matplotlib = "^3.9.2"
+pywa = "^1.25.0"
 
 
 [tool.poetry.group.dev.dependencies]
