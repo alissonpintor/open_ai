@@ -1,0 +1,22 @@
+{
+    "itens": [
+        {
+            "Referencia": "50300201",
+            "Descrição": "DIATEX PINTA MAIS BRANCO NEVE 3,6L",
+            "Qtde": "48",
+            "Preço Líq": "24,59",
+            "Preço total": "1.180,32"
+        },
+        {
+            "Referencia": "11100104",
+            "Descrição": "SELADORA CONCENTRADAINCOLOR 900 ML",
+            "Qtde": "60",
+            "Preço Líq": "16,51",
+            "Preço total": "990,60"
+        }
+    ]
+}
+
+{
+    "colunas": ["Produto", "Descrição", "Emb.", "Qtdade", "Vlr.Unit"]
+}
