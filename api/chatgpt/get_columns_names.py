@@ -2,7 +2,6 @@ import json
 from api.chatgpt.client import ChatGPTClient
 
 class GetColumnsNamesService:
-    _client = None
     _prompt_messages: list = []
     _system_message = {
         'role': 'assistant',
@@ -36,7 +35,11 @@ class GetColumnsNamesService:
             }
         )
 
-        column_names = json.loads(response.choices[0].message.content)
+        if response.choices[0].message.content is None:
+            return []
+
+        json_response = json.loads(response.choices[0].message.content)
+        column_names: list = json_response.get('colunas', [])
 
         return column_names
 

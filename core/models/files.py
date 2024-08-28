@@ -2,7 +2,8 @@ class Files:
     _files: list[bytes] = []
 
     def add(self, file: bytes | list[bytes]):
-        self._files.append(file)
+        is_list: bool = isinstance(file, list)
+        self._files.extend(file) if is_list else self._files.append(file)
     
     def get_first(self) -> bytes:
         return self._files[0]

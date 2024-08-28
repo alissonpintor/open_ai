@@ -32,55 +32,50 @@ def initialize():
 
 def has_pdf_uploaded():
     if st.session_state.pdf_file_uploaded is None:
-        if 'colunas' in st.session_state:
-            del st.session_state['colunas']
+        st.session_state.colunas_selecionadas.clear_all()
         st.session_state.base64_images.clear()
 
 if __name__ == '__main__':
+    initialize()
+    
     image_handler: PdfFileHandler = PdfFileHandler()
     get_columns_service: GetColumnsNamesService = GetColumnsNamesService()
-
-    initialize()
     base64_images: Files = st.session_state.base64_images
     columns: Columns = st.session_state.colunas_selecionadas
-
-    is_columns_generated: bool = 'colunas' in st.session_state
     
-    st.file_uploader('Selecione o pdf a ser convertido', 'pdf', disabled=is_columns_generated, key='pdf_file_uploaded', on_change=has_pdf_uploaded)
+    st.file_uploader('Selecione o pdf a ser convertido', 'pdf', disabled=columns.has_columns_names(), key='pdf_file_uploaded', on_change=has_pdf_uploaded)
     
-    if not is_columns_generated and st.session_state.pdf_file_uploaded is not None:
+    if not columns.has_columns_names() and st.session_state.pdf_file_uploaded is not None:
         with st.spinner('Convertendo o pdf...'):
-            print('Convertendo imagens...')
             pdf_file_uploaded = st.session_state.pdf_file_uploaded
             pdf_file_uploaded = pdf_file_uploaded.getvalue()
             base64_images.add(image_handler.process_pdf_to_image(pdf_file_uploaded))
         
-    if not is_columns_generated and base64_images.has_files():
-        with st.spinner('Enviando para a AI...'):
-            print('Enviando para o ChatGPT...')
+    if not columns.has_columns_names() and base64_images.has_files():
+        with st.spinner('Enviando para a analise...'):
 
             base64_image = base64_images.get_first()
             column_names = get_columns_service.execute(base64_image)
 
             if column_names:
-                st.session_state['colunas'] = column_names['colunas']
+                columns.add_pdf_columns_names(column_names)
     
-    if 'colunas' in st.session_state:
+    if columns.has_columns_names():
         st.write('Selecione a colunas correspondentes aos campos a seguir:')
         
         col1, col2, col3, col4 = st.columns(4)
 
         with col1:
-            referencia = st.selectbox('Referencia', st.session_state['colunas'])
+            referencia = st.selectbox('Referencia', columns.get_columns_names())
         
         with col2:
-            descricao = st.selectbox('Descricão', st.session_state['colunas'])
+            descricao = st.selectbox('Descricão', columns.get_columns_names())
         
         with col3:
-            quantidade = st.selectbox('Qtdade', st.session_state['colunas'])
+            quantidade = st.selectbox('Qtdade', columns.get_columns_names())
         
         with col4:
-            vlr_unitario = st.selectbox('Vlr.Unitário', st.session_state['colunas'])
+            vlr_unitario = st.selectbox('Vlr.Unitário', columns.get_columns_names())
     
     if 1==2:
         system_message = {
