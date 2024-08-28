@@ -35,6 +35,9 @@ class Columns:
     
     def clear_all(self) -> None:
         self.__pdf_columns_names.clear()
+        self.clear_names()
+    
+    def clear_names(self):
         self.__referencia = None
         self.descricao = None
         self.quantidade = None
