@@ -3,7 +3,7 @@ import openai
 
 
 class ChatGPTClient:
-    _instance: openai.Client = None
+    _instance: openai.Client | None = None
 
     @classmethod
     def instance(cls):

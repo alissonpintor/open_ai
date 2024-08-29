@@ -5,7 +5,8 @@ from core.handlers.pdf_file_handler import PdfFileHandler
 from core.models.files import Files
 from core.models.columns import Columns
 from api.chatgpt.get_columns_names import GetColumnsNamesService
-from presentation.main import Main
+from api.chatgpt.get_itens_data import GetItensDataService
+from view.main import Main
 
 
 dotenv.load_dotenv()
@@ -40,12 +41,14 @@ if __name__ == '__main__':
     
     pdf_handler: PdfFileHandler = PdfFileHandler()
     get_columns_service: GetColumnsNamesService = GetColumnsNamesService()
+    get_itens_service: GetItensDataService = GetItensDataService()
     base64_images: Files = st.session_state.base64_images
     columns: Columns = st.session_state.colunas_selecionadas
 
     main = Main(
         pdf_handler,
         get_columns_service,
+        get_itens_service,
         base64_images,
         columns
     )
