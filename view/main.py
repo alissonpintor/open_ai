@@ -9,11 +9,6 @@ from core.models.files import Files
 
 
 class Main:
-    __pdf_handler: PdfFileHandler
-    __get_columns_service: GetColumnsNamesService
-    __get_itens_service: GetItensDataService
-    __base64_images: Files
-    __columns: Columns
 
     def __init__(
             self,
@@ -22,11 +17,11 @@ class Main:
             get_itens_service: GetItensDataService,
             base64_images: Files,
             columns: Columns) -> None:
-        self.__pdf_handler = pdf_handler
-        self.__get_columns_service = get_columns_service
-        self.__get_itens_service = get_itens_service
-        self.__base64_images = base64_images
-        self.__columns = columns
+        self.__pdf_handler: PdfFileHandler = pdf_handler
+        self.__get_columns_service: GetColumnsNamesService = get_columns_service
+        self.__get_itens_service: GetItensDataService = get_itens_service
+        self.__base64_images: Files = base64_images
+        self.__columns: Columns = columns
 
     def render(self) -> None:
         st.title('Processamento de pedidos')
@@ -46,7 +41,6 @@ class Main:
                 self.__extract_itens_data()
 
     def __render_file_upload(self) -> None:
-        print(self.__columns.has_columns_names())
         st.file_uploader(
             'Selecione o pdf a ser convertido',
             'pdf', 

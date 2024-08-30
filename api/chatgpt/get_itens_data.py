@@ -1,11 +1,9 @@
 import json
 import openai
-import referencing
 from api.chatgpt.client import ChatGPTClient
 from core.models.columns import Columns
 from core.models.files import Files
 from typing import Any
-
 
 
 class GetItensDataService:
@@ -25,7 +23,7 @@ class GetItensDataService:
         for image in images:
             user_message = self.__get_user_message(image)
             self.__prompt_messages.append(user_message)
-            
+
             response = self.__client.chat.completions.create(
                 messages=self.__prompt_messages,
                 model='gpt-4o',

@@ -1,34 +1,22 @@
 import json
+
+from openai import Client
+from openai.types.chat.chat_completion import ChatCompletion
 from api.chatgpt.client import ChatGPTClient
 
 class GetColumnsNamesService:
-    _prompt_messages: list = []
-    _system_message = {
-        'role': 'assistant',
-        'content': '''
-            Você recebe uma imagem que possui textos com uma tabela de itens e deve retornar o um json contendo 
-            o nome dessas tabelas seguindo um exemplo a seguir entre ####:
-
-            ####
-            {
-                "colunas": ["Produto", "Descrição", "Emb.", "Qtdade", "Vlr.Unit"]
-            }
-            ####
-
-            Retorne somente o json na resposta
-        '''
-    }
 
     def __init__(self) -> None:
-        self._client = ChatGPTClient.instance()
-    
+        self.__client: Client = ChatGPTClient.instance()
+        self.__prompt_messages: list = []
+
     def execute(self, image: bytes) -> list:
-        self._prompt_messages.append(self._system_message)
-        user_message = self._get_user_message(image)
-        self._prompt_messages.append(user_message)
-        
-        response = self._client.chat.completions.create(
-            messages=self._prompt_messages,
+        self.__prompt_messages.append(self.__get_system_message())
+        user_message = self.__get_user_message(image)
+        self.__prompt_messages.append(user_message)
+
+        response: ChatCompletion = self.__client.chat.completions.create(
+            messages=self.__prompt_messages,
             model='gpt-4o',
             response_format={
                 'type': 'json_object'
@@ -43,8 +31,25 @@ class GetColumnsNamesService:
 
         return column_names
 
-    def _get_user_message(self, image: bytes) -> dict:
-        user_message = {
+    def __get_system_message(self) -> dict[str, str]:
+        return {
+            'role': 'assistant',
+            'content': '''
+                Você recebe uma imagem que possui textos com uma tabela de itens e deve retornar o um json contendo 
+                o nome dessas tabelas seguindo um exemplo a seguir entre ####:
+
+                ####
+                {
+                    "colunas": ["Produto", "Descrição", "Emb.", "Qtdade", "Vlr.Unit"]
+                }
+                ####
+
+                Retorne somente o json na resposta
+            '''
+        }
+
+    def __get_user_message(self, image: bytes) -> dict:
+        return {
             'role': 'user',
             'content': [
                 {
@@ -55,4 +60,3 @@ class GetColumnsNamesService:
                 }
             ]
         }
-        return user_message
