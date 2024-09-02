@@ -12,10 +12,11 @@ load_dotenv(find_dotenv())
 phone_id = os.environ.get('WHATSAPP_API_PHONE_ID')
 token = os.environ.get('WHATSAPP_API_TOKEN')
 
-wp = WhatsApp(phone_id=phone_id, token=token)
+if token:
+    wp = WhatsApp(phone_id=phone_id, token=token)
 
-message = wp.send_message(
-    to='+5565999976012',
-    text='Primeiro teste de envio de mensagem'
-)
-print(message)
+    message = wp.send_message(
+        to='5565999976012',
+        text='Primeiro teste de envio de mensagem'
+    )
+    print(message)
