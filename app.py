@@ -46,10 +46,10 @@ if __name__ == '__main__':
     columns: Columns = st.session_state.colunas_selecionadas
 
     main = Main(
-        pdf_handler,
-        get_columns_service,
-        get_itens_service,
-        base64_images,
-        columns
+        pdf_handler=pdf_handler,
+        get_columns_service=get_columns_service,
+        get_itens_service=get_itens_service,
+        base64_images=base64_images,
+        columns=columns
     )
     main.render()

@@ -27,6 +27,7 @@ class GetItensDataService:
             response = self.__client.chat.completions.create(
                 messages=self.__prompt_messages,
                 model='gpt-4o',
+                temperature=0,
                 response_format={
                     'type': 'json_object'
                 },
@@ -45,7 +46,7 @@ class GetItensDataService:
         return {
             'role': 'assistant',
             'content': '''
-                Você recebe uma imagem que possui textos com uma tabela de itens e deve retornar o um json contendo 
+                Você recebe uma imagem de um pedido de venda com uma tabela de itens e deve retornar o um json contendo 
                 os itens dessa tabela seguindo o exemplo entre ####:
 
                 ####
@@ -67,22 +68,13 @@ class GetItensDataService:
                 ####
             ''' + (
             f'''
-                Na imagem Referencia se chama "{columns.referencia}", Descrição se chama "{columns.descricao}",
-                Qtde se chama "{columns.quantidade}" e Preço Líq se chama "{columns.vlr_unitario}". Siga os passos
-                a seguir:
-
-                1) Identifique a posição das colunas na imagem
-                2) Extraia os dados referentes a cada coluna em cada linha da tabela
-                3) Preenha o json com os dados extraidos de acordo com o modelo citado
-                4) Passe para a próxima linha e repita os passos 2 e 3
-                5) Se receber mais imagens repita os passos 1, 2, 3 e 4 e caso a tabela da imagem não possua as colunas 
-                   utilize a mesma posição das colunas da primeira imagem enviada
-                6) retorne o json com os dados
+                Na imagem enviada a coluna Referencia se chama "{columns.referencia}", Descrição se chama "{columns.descricao}",
+                Qtde se chama "{columns.quantidade}" e Preço Líq se chama "{columns.vlr_unitario}".
             '''
             )
         }
     
-    def __get_user_message(self, image: bytes) -> dict:
+    def __get_user_message(self, image: str) -> dict:
         user_message = {
             'role': 'user',
             'content': [

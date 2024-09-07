@@ -4,13 +4,30 @@ from openai import Client
 from openai.types.chat.chat_completion import ChatCompletion
 from api.chatgpt.client import ChatGPTClient
 
+antigo = {
+            'role': 'assistant',
+            'content': '''
+                Você recebe uma imagem de um pedido de venda contendo uma tabela de itens e deve retornar um json contendo 
+                o nome das colunas dessa tabela seguindo um exemplo a seguir entre ####:
+
+                ####
+                {
+                    "colunas": ["Produto", "Descrição", "Emb.", "Qtdade", "Vlr.Unit"]
+                }
+                ####
+
+                Retorne somente o json na resposta  não invete valores que não existem
+            '''
+        }
+
+
 class GetColumnsNamesService:
 
     def __init__(self) -> None:
         self.__client: Client = ChatGPTClient.instance()
         self.__prompt_messages: list = []
 
-    def execute(self, image: bytes) -> list:
+    def execute(self, image: str) -> list:
         self.__prompt_messages.append(self.__get_system_message())
         user_message = self.__get_user_message(image)
         self.__prompt_messages.append(user_message)
@@ -18,6 +35,7 @@ class GetColumnsNamesService:
         response: ChatCompletion = self.__client.chat.completions.create(
             messages=self.__prompt_messages,
             model='gpt-4o',
+            temperature=0,
             response_format={
                 'type': 'json_object'
             }
@@ -35,20 +53,13 @@ class GetColumnsNamesService:
         return {
             'role': 'assistant',
             'content': '''
-                Você recebe uma imagem que possui textos com uma tabela de itens e deve retornar o um json contendo 
-                o nome dessas tabelas seguindo um exemplo a seguir entre ####:
-
-                ####
-                {
-                    "colunas": ["Produto", "Descrição", "Emb.", "Qtdade", "Vlr.Unit"]
-                }
-                ####
-
-                Retorne somente o json na resposta
+                Você recebe uma imagem de um pedido de venda contendo uma tabela de itens e deve extrair os
+                nomes das colunas dessa tabela. Retorne um json com os nomes dessas colunas e não invente
+                valores que não existem na imagem.
             '''
         }
 
-    def __get_user_message(self, image: bytes) -> dict:
+    def __get_user_message(self, image: str) -> dict:
         return {
             'role': 'user',
             'content': [

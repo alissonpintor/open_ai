@@ -1,18 +1,30 @@
-class Files:
-    _files: list[bytes] = []
+import PIL.Image as img
+from typing import Iterator
 
-    def add(self, file: bytes | list[bytes]):
+
+class Files:
+    def __init__(self) -> None:
+        self.__base64_files: list[str] = []
+        self.__image: img.Image | None = None
+
+    def add(self, file: str | list[str]):
         is_list: bool = isinstance(file, list)
-        self._files.extend(file) if is_list else self._files.append(file)
+        self.__base64_files.extend(file) if is_list else self.__base64_files.append(file)
     
-    def get_first(self) -> bytes:
-        return self._files[0]
+    def get_image(self) -> img.Image | None:
+        return self.__image
+    
+    def set_image(self, image: img.Image) -> None:
+        self.__image = image
+    
+    def get_first(self) -> str:
+        return self.__base64_files[0]
 
     def has_files(self) -> bool:
-        return True if len(self._files) > 0 else False
+        return True if len(self.__base64_files) > 0 else False
     
     def clear(self) -> None:
-        self._files.clear()
+        self.__base64_files.clear()
     
-    def __iter__(self):
-        return iter(self._files)
+    def __iter__(self) -> Iterator[str]:
+        return iter(self.__base64_files)
